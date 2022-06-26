@@ -1,0 +1,77 @@
+<div [class.is-mobile]="mobileQuery.matches">
+  <div class="auth-header" *ngIf="!authInfo?.isAuthenticated">
+    <!-- eRecruitment Portal -->
+  </div>
+  <mat-toolbar class="toolbar" *ngIf="isLoggedIn$ | async" color="primary">
+    <mat-toolbar-row>
+      <button
+        mat-icon-button
+        (click)="navService.toggle()"
+        style="color: white"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <h1 id="headline">Notes Management System</h1>
+
+      <h1 class="app-name mt-3">
+        <!-- <img
+          src="../../assets/images/logo2.png"
+          style="width: 93px; height: 40px"
+          alt="Applicant Pic"
+        /> -->
+      </h1>
+      <span class="spacer"></span>
+      <span style="margin-right: 10px;">Welcome {{authInfo?.userInformation?.user?.name}}</span>
+      <avatar
+        [imageSrc]="
+            authInfo?.userInformation?.picture
+              ? 'data:image/jpg;base64,' + authInfo?.userInformation?.picture
+              : defaultsrc
+          "
+        [matMenuTriggerFor]="menu"
+        [size]="35"
+      >
+      </avatar>
+      <mat-menu #menu="matMenu">
+        <!-- <button mat-menu-item (click)="onPasswordChange()">Change Password</button> -->
+        <button type="button" mat-menu-item (click)="onLogOut()">Logout</button>
+      </mat-menu>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-sidenav-container
+    class="sidenav-container"
+    [style.marginTop.px]="(isLoggedIn$ | async) && mobileQuery.matches ? 56 : 0"
+  >
+    <mat-sidenav
+      #appDrawer
+      [mode]="'over'"
+      [fixedInViewport]="mobileQuery.matches"
+      [disableClose]="false"
+    >
+      <mat-nav-list>
+        <nav-menu-item
+          *ngFor="let item of navigationList"
+          [item]="item"
+        ></nav-menu-item>
+      </mat-nav-list>
+    </mat-sidenav>
+
+
+    <mat-sidenav-content>
+      <mat-card
+        [ngClass]="[
+          (isLoggedIn$ | async) ? 'card' : 'card-auth',
+          isFullScreen ? 'fullscreen' : ''
+        ]"
+      >
+        <mat-card-content [ngClass]="!isLoggedIn$ ? 'card-content-auth' : ''">
+          <router-outlet *ngIf="routerOutletActive"></router-outlet>
+          <div class="footer" *ngIf="!isFullScreen">
+            <div>&copy; Copyright Ibrahim Sumon. All rights reserved.</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
